@@ -1,8 +1,8 @@
 """
-Local face authentication (LBPH), ported from the Colab notebook.
+Local face authentication (LBPH).
 
 Commands:
-  python face_auth.py capture --user "Alejandro Melo" --count 30
+  python face_auth.py capture
   python face_auth.py train
   python face_auth.py recognize
 """
@@ -89,8 +89,41 @@ def take_photo(filename: str = "photo.jpg") -> str:
     return filename
 
 
-def cmd_capture(user_name: str, count: int) -> None:
+def list_profiles() -> list[str]:
+    if not os.path.isdir(DATASET_DIR):
+        return []
+    return [
+        folder
+        for folder in sorted(os.listdir(DATASET_DIR))
+        if os.path.isdir(os.path.join(DATASET_DIR, folder))
+        and folder != "__pycache__"
+        and any(
+            name.lower().endswith((".jpg", ".jpeg", ".png"))
+            for name in os.listdir(os.path.join(DATASET_DIR, folder))
+        )
+    ]
+
+
+def ask_profile_name() -> str:
+    existing = list_profiles()
+    if existing:
+        print("Existing profiles:", ", ".join(existing))
+    while True:
+        name = input("New profile name: ").strip()
+        if not name:
+            print("Profile name cannot be empty.")
+            continue
+        invalid = set(name) & set(r'<>:"/\|?*')
+        if invalid:
+            print("Profile name contains invalid characters.")
+            continue
+        return name
+
+
+def cmd_capture(user_name: str | None, count: int) -> None:
     ensure_dirs()
+    if not user_name:
+        user_name = ask_profile_name()
     detector = load_face_detector()
     user_dir = os.path.join(DATASET_DIR, user_name)
     os.makedirs(user_dir, exist_ok=True)
@@ -115,7 +148,7 @@ def cmd_capture(user_name: str, count: int) -> None:
 
         cv2.putText(
             display,
-            f"{user_name}  {saved}/{count}  SPACE=save  ESC=exit",
+            f"Profile  {saved}/{count}  SPACE=save  ESC=exit",
             (16, 32),
             cv2.FONT_HERSHEY_SIMPLEX,
             0.7,
@@ -146,12 +179,7 @@ def cmd_capture(user_name: str, count: int) -> None:
 def load_training_data():
     faces = []
     labels = []
-    user_folders = [
-        folder
-        for folder in sorted(os.listdir(DATASET_DIR))
-        if os.path.isdir(os.path.join(DATASET_DIR, folder))
-        and folder != "__pycache__"
-    ]
+    user_folders = list_profiles()
     print("Users found:", user_folders)
 
     for label_id, user_name in enumerate(user_folders):
@@ -252,8 +280,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Local LBPH face authentication")
     sub = parser.add_subparsers(dest="command", required=True)
 
-    capture = sub.add_parser("capture", help="Capture face images for a user")
-    capture.add_argument("--user", default="Alejandro Melo")
+    capture = sub.add_parser("capture", help="Create a profile and capture face images")
+    capture.add_argument(
+        "--user",
+        default=None,
+        help="Profile name. If omitted, you will be asked for a new profile name.",
+    )
     capture.add_argument("--count", type=int, default=30)
 
     sub.add_parser("train", help="Train the LBPH model from dataset/")

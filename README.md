@@ -1,8 +1,6 @@
 # AI Face ID
 
-Local port of the Colab face-authentication notebook (Haar detection + LBPH recognition).
-
-Original notebook: [Colab](https://colab.research.google.com/drive/1a6IrMLw_6yxn2Viofm7AEoXEs9VsnyeL?usp=sharing)
+Local face authentication with Haar Cascade detection and LBPH recognition (OpenCV).
 
 ## Setup
 
@@ -21,10 +19,10 @@ pip install opencv-contrib-python==4.10.0.84
 
 ## Run
 
-1. Capture ~30 face images (SPACE to save, ESC to finish):
+1. Create a new profile and capture about 30 face images. The program asks for the profile name. Press SPACE to save a face and ESC to finish:
 
 ```powershell
-python face_auth.py capture --user "Alejandro Melo" --count 30
+python face_auth.py capture --count 30
 ```
 
 2. Train the model:
@@ -39,10 +37,8 @@ python face_auth.py train
 python face_auth.py recognize
 ```
 
-A Jupyter version of the same flow is in `face_authentication.ipynb`.
-
 ## Notes
 
-- Access is granted when LBPH distance is below `70` (same threshold as the Colab notebook).
-- Dataset images go to `dataset/<user>/`. The model is saved as `model/face_model.yml` and `model/label_map.json`.
-- Webcam capture uses OpenCV (`CAP_DSHOW` on Windows) instead of Google Colab JavaScript.
+- Access is granted when LBPH distance is below `70`.
+- Dataset images go to `dataset/<profile>/`. The model is saved as `model/face_model.yml` and `model/label_map.json`.
+- Webcam capture uses OpenCV (`CAP_DSHOW` on Windows).

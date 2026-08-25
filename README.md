@@ -42,3 +42,13 @@ python face_auth.py recognize
 - Access is granted when LBPH distance is below `70`.
 - Dataset images go to `dataset/<profile>/`. The model is saved as `model/face_model.yml` and `model/label_map.json`.
 - Webcam capture uses OpenCV (`CAP_DSHOW` on Windows).
+
+## Contributors
+
+- [Alejandro Melo (@Al3mf)](https://github.com/Al3mf)
+- [Montse Sanchez (@sanchezmontse)](https://github.com/sanchezmontse)
+- [Sergio Jr. Barajas Montes (@barajasequationz)](https://github.com/barajasequationz)
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).

@@ -47,7 +47,8 @@ python face_auth.py recognize
 
 - [Alejandro Melo (@Al3mf)](https://github.com/Al3mf)
 - [Montse Sanchez (@sanchezmontse)](https://github.com/sanchezmontse)
-- [Sergio Jr. Barajas Montes (@barajasequationz)](https://github.com/barajasequationz)
+- [Rodolfo Monreal (@Rodo3118)](https://github.com/Rodo3118)
+- [Sergio Barajas (@barajasequationz)](https://github.com/barajasequationz)
 
 ## License
 
